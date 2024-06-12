@@ -57,3 +57,32 @@ export const PATCH = async (req: Request) => {
     return new NextResponse("Error updating user" + error.message, { status: 500 });
   }
 }
+
+export const DELETE = async (req: Request) => {
+  try {
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if(!userId) {
+      return new NextResponse("Missing required fields", { status: 400 });
+    }
+
+    if(!Types.ObjectId.isValid(userId)) {
+      return new NextResponse("Invalid user ID", { status: 400 });
+    }
+
+    await connect();
+
+    const deletedUser = await User.findByIdAndDelete(
+      new Types.ObjectId(userId)
+    );
+
+    if(!deletedUser) {
+      return new NextResponse("User not found", { status: 404 });
+    }
+
+    return new NextResponse(JSON.stringify({ message: "User is deleted", user: deletedUser }), { status: 200 });
+  } catch (error: any) {
+    return new NextResponse("Error deleting user" + error.message, { status: 500 });
+  }
+}
