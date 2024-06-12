@@ -11,3 +11,15 @@ export const GET = async () => {
     return new NextResponse("Error fetching users" + error.message, { status: 500 });
   }
 }
+
+export const POST = async (req: Request) => {
+  try {
+    const body = await req.json();
+    await connect();
+    const newUser = new User(body);
+    await newUser.save();
+    return new NextResponse(JSON.stringify({ message: "User is created", user: newUser}), { status: 200 });
+  } catch (error: any) {
+    return new NextResponse("Error creating user" + error.message, { status: 500 });
+  }
+}
