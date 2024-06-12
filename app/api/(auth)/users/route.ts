@@ -1,5 +1,13 @@
+import connect from "@/lib/db";
+import User from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
-  return NextResponse.json({ hello: "world" });
+  try {
+    await connect();
+    const users = await User.find();
+    return new NextResponse(JSON.stringify(users), { status: 200 });
+  } catch (error: any) {
+    return new NextResponse("Error fetching users" + error.message, { status: 500 });
+  }
 }
