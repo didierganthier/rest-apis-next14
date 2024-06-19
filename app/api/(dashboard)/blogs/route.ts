@@ -4,7 +4,6 @@ import User from "@/lib/models/user";
 import Category from "@/lib/models/category";
 import { Types } from "mongoose";
 import { NextResponse } from "next/server";
-import { title } from "process";
 
 export const GET = async (req: Request) => {
     try {
